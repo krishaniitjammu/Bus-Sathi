@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bus Tracker</string>
+    
+    <!-- Login Screen -->
+    <string name="login_title">Bus Driver Login</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">LOG IN</string>
+    <string name="login_error">Wrong Credentials!! Please try again.</string>
+    <string name="email_required">Email is required</string>
+    <string name="password_required">Password is required</string>
+    <string name="logging_in">Logging in…</string>
+    
+    <!-- Registration -->
+    <string name="create_account_title">Create Driver Account</string>
+    <string name="driver_name_hint">Driver name</string>
+    <string name="phone_hint">Phone number</string>
+    <string name="vehicle_hint">Vehicle/Bus number</string>
+    <string name="license_hint">License number</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="name_required">Name is required</string>
+    <string name="registering">Registering…</string>
+    <string name="registration_error">Registration failed. Please try again.</string>
+    <string name="registration_success">Registration successful. Please sign in with your new account.</string>
+    <string name="create_account_link">Don\'t have an account? Create one</string>
+    
+    <!-- Main Screen -->
+    <string name="welcome_message">Welcome, %s</string>
+    <string name="welcome_message_with_bus">Welcome %1$s,\nBus Number: %2$s</string>
+    <string name="trip_status_idle">No active trip</string>
+    <string name="trip_status_active">Trip in progress</string>
+    <string name="start_trip">Start Trip</string>
+    <string name="end_trip">End Trip</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="points_recorded">Points Recorded: %d</string>
+    <string name="distance_traveled">Distance: %.2f km</string>
+    
+    <!-- Permissions -->
+    <string name="permission_rationale">Location permission is required to track your bus route during trips.</string>
+    <string name="permission_denied">Location permission denied. The app cannot function without it.</string>
+    <string name="permission_settings">Please grant location permission in Settings.</string>
+    
+    <!-- Service Notification -->
+    <string name="notification_channel_name">Trip Tracking</string>
+    <string name="notification_channel_description">Notifications for active trip tracking</string>
+    <string name="notification_title">Trip in Progress</string>
+    <string name="notification_text">Recording route: %d points, %.2f km</string>
+    
+    <!-- Messages -->
+    <string name="trip_started">Trip started successfully</string>
+    <string name="trip_ended">Trip ended. Uploading route data…</string>
+    <string name="upload_success">Route uploaded successfully</string>
+    <string name="upload_error">Failed to upload route. Will retry.</string>
+    <string name="gps_disabled">Please enable GPS to track your route</string>
+</resources>

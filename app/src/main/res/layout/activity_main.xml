@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Header with Logos -->
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/header_bg"
+        android:padding="16dp"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/ivIitLogo"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="IIT Jammu Logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/iit_jammu_logo" />
+
+        <ImageView
+            android:id="@+id/ivWhatsappLogo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="WhatsApp Logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/whatsapp_logo" />
+
+    </RelativeLayout>
+
+    <!-- Main Content with Gradient Background -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@drawable/gradient_background">
+
+        <!-- Welcome Message -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_message"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Trip Status Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tvTripStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trip_status_idle"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/tvPointsRecorded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/points_recorded"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/distance_traveled"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Start Trip Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartTrip"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/start_trip"
+            android:textSize="16sp"
+            android:backgroundTint="@color/button_green"
+            app:cornerRadius="8dp"
+            app:icon="@android:drawable/ic_media_play"
+            android:layout_marginBottom="16dp" />
+
+        <!-- End Trip Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEndTrip"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/end_trip"
+            android:textSize="16sp"
+            android:backgroundTint="@color/button_disabled"
+            app:cornerRadius="8dp"
+            app:icon="@android:drawable/ic_media_pause"
+            android:enabled="false"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Logout Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/logout"
+            android:textSize="14sp"
+            android:backgroundTint="@color/logout_red"
+            app:cornerRadius="8dp" />
+
+        <!-- Sign Out Button (Hidden, keeping for backward compatibility) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_out"
+            android:textSize="14sp"
+            android:visibility="gone"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </LinearLayout>
+
+</LinearLayout>
