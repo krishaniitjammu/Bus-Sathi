@@ -1,4 +1,4 @@
-package com.bustracker.ui.auth
+package com.karroh.bussathi.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.bustracker.R
-import com.bustracker.data.repository.AuthRepository
-import com.bustracker.databinding.ActivityLoginBinding
-import com.bustracker.ui.main.MainActivity
+
+import com.karroh.bussathi.data.repository.AuthRepository
+import com.karroh.bussathi.databinding.ActivityLoginBinding
+import com.karroh.bussathi.ui.main.MainActivity
+import com.karroh.bussathi.R
 import kotlinx.coroutines.launch
 
 /**

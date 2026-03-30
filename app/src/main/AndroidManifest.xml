@@ -34,6 +34,13 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BusTrackerApp">
+
+        </activity>
+
+        <activity
+            android:name=".ui.splash.IntroAnimationActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -56,6 +63,7 @@
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         
         <!-- Location Tracking Service -->

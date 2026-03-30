@@ -1,4 +1,4 @@
-package com.bustracker.data.model
+package com.karroh.bussathi.data.model
 
 /**
  * Represents a single GPS location point

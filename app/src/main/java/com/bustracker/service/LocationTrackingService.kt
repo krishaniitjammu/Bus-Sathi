@@ -1,14 +1,16 @@
-package com.bustracker.service
+package com.karroh.bussathi.service
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.bustracker.R
-import com.bustracker.data.repository.LocationRepository
-import com.bustracker.ui.main.MainActivity
+
+import com.karroh.bussathi.data.repository.LocationRepository
+import com.karroh.bussathi.ui.main.MainActivity
+import com.karroh.bussathi.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,11 +31,14 @@ class LocationTrackingService : Service() {
     
     private var pointCount = 0
     private var totalDistance = 0.0
+
+    // GPS Background Monitoring
+    private var gpsReceiver: android.content.BroadcastReceiver? = null
     
     companion object {
         const val CHANNEL_ID = "LocationTrackingChannel"
         const val NOTIFICATION_ID = 1
-        const val ACTION_LOCATION_UPDATE = "com.bustracker.LOCATION_UPDATE"
+        const val ACTION_LOCATION_UPDATE = "com.karroh.bussathi.LOCATION_UPDATE"
         const val EXTRA_POINT_COUNT = "point_count"
         const val EXTRA_DISTANCE = "distance"
     }
@@ -54,6 +59,8 @@ class LocationTrackingService : Service() {
         super.onCreate()
         locationRepository = LocationRepository.getInstance(applicationContext)
         createNotificationChannel()
+
+        registerGpsReceiver()
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -73,6 +80,8 @@ class LocationTrackingService : Service() {
         // Reset stats when service is destroyed
         pointCount = 0
         totalDistance = 0.0
+
+        gpsReceiver?.let { unregisterReceiver(it) }
     }
     
     /**
@@ -194,5 +203,60 @@ class LocationTrackingService : Service() {
      */
     fun getStatistics(): Pair<Int, Double> {
         return Pair(pointCount, totalDistance)
+    }
+
+    private fun registerGpsReceiver() {
+        gpsReceiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (android.location.LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
+                    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+                    val isGpsEnabled = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)
+
+                    if (!isGpsEnabled) {
+                        sendGpsWarningNotification()
+                    }
+                }
+            }
+        }
+        val filter = android.content.IntentFilter(android.location.LocationManager.PROVIDERS_CHANGED_ACTION)
+        registerReceiver(gpsReceiver, filter)
+    }
+
+    private fun sendGpsWarningNotification() {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        // 1. Create a High-Priority Channel (Required for Android 8+)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                "gps_alert_channel",
+                "GPS Alerts",
+                android.app.NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Alerts when GPS is turned off during a trip"
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // 2. Create an Intent that opens Location Settings when the notification is tapped
+        val settingsIntent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        val pendingIntent = android.app.PendingIntent.getActivity(
+            this, 0, settingsIntent, android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // 3. Build and show the notification
+        val notification = androidx.core.app.NotificationCompat.Builder(this, "gps_alert_channel")
+            .setContentTitle("⚠️ Trip Paused: GPS is OFF")
+            .setContentText("Tap here to turn on Location and resume recording points.")
+            .setSmallIcon(android.R.drawable.ic_dialog_alert) // You can change this to R.drawable.your_app_icon later
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .setCategory(androidx.core.app.NotificationCompat.CATEGORY_ERROR)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        // 999 is just a unique ID for this specific alert
+        notificationManager.notify(999, notification)
     }
 }

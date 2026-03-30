@@ -1,4 +1,4 @@
-package com.bustracker.data.model
+package com.karroh.bussathi.data.model
 
 /**
  * Represents a complete bus trip with route data

@@ -40,7 +40,7 @@ Before running this app, you need:
 
 ### 2. Register Your App
 
-1. Enter package name: `com.bustracker`
+1. Enter package name: `com.karroh.bussathi`
 2. Download the `google-services.json` file
 3. Replace the placeholder `app/google-services.json` with your downloaded file
 

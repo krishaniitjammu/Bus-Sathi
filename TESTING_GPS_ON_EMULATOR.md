@@ -110,7 +110,7 @@ Then load this file in the emulator's Extended Controls → Location → Routes 
 
 1. **Check Logcat** for errors:
    - In Android Studio, open the **Logcat** tab
-   - Filter by your package: `com.bustracker`
+   - Filter by your package: `com.karroh.bussathi`
    - Look for any errors related to location permissions or GPS
 
 2. **Verify Permissions**:

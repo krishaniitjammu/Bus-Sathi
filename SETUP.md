@@ -54,7 +54,7 @@ sdk.dir=/home/YOUR_USERNAME/Android/Sdk
 #### 3.2 Add Android App to Firebase
 
 1. In your Firebase project, click the Android icon
-2. Register your app with package name: `com.bustracker`
+2. Register your app with package name: `com.karroh.bussathi`
 3. Download the `google-services.json` file
 4. Place it in the `app/` directory (replacing the `.template` file)
 

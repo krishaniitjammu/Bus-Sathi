@@ -5,38 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Header with Logos -->
-    <RelativeLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/header_bg"
-        android:padding="16dp"
-        android:elevation="4dp">
-
-        <ImageView
-            android:id="@+id/ivIitLogo"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="IIT Jammu Logo"
-            android:scaleType="fitCenter"
-            android:src="@drawable/iit_jammu_logo" />
-
-        <ImageView
-            android:id="@+id/ivWhatsappLogo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="WhatsApp Logo"
-            android:scaleType="fitCenter"
-            android:src="@drawable/whatsapp_logo" />
-
-    </RelativeLayout>
-
-    <!-- Main Content with Gradient Background -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,112 +12,127 @@
         android:padding="24dp"
         android:background="@drawable/gradient_background">
 
-        <!-- Welcome Message -->
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome_message"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/white"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp" />
 
-        <!-- Trip Status Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            app:cardElevation="4dp"
+            app:cardElevation="6dp"
             app:cardCornerRadius="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="horizontal"
+                android:padding="24dp"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tvTripStatus"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/trip_status_idle"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvPointsRecorded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/points_recorded"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:id="@+id/tvTripStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/trip_status_idle"
+                        android:textColor="@color/primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/distance_traveled"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary" />
+                    <TextView
+                        android:id="@+id/tvPointsRecorded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="Points Recorded: 0"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distance: 0.00 km"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottieBusAnimation"
+                    android:layout_width="100dp"
+                    android:layout_height="85dp"
+                    android:layout_marginStart="12dp"
+                    app:lottie_rawRes="@raw/bus_driving"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="true" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Start Trip Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartTrip"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="@string/start_trip"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:backgroundTint="@color/button_green"
             app:cornerRadius="8dp"
             app:icon="@android:drawable/ic_media_play"
+            app:iconGravity="textStart"
             android:layout_marginBottom="16dp" />
 
-        <!-- End Trip Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEndTrip"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="@color/button_disabled"
+            android:enabled="false"
             android:text="@string/end_trip"
             android:textSize="16sp"
-            android:backgroundTint="@color/button_disabled"
+            android:textStyle="bold"
             app:cornerRadius="8dp"
             app:icon="@android:drawable/ic_media_pause"
-            android:enabled="false"
-            android:layout_marginBottom="32dp" />
+            app:iconGravity="textStart" />
 
-        <!-- Spacer -->
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Logout Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:text="@string/logout"
             android:textSize="14sp"
+            android:textStyle="bold"
             android:backgroundTint="@color/logout_red"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="8dp"
+            android:layout_marginBottom="50dp" />
 
-        <!-- Sign Out Button (Hidden, keeping for backward compatibility) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_out"
-            android:textSize="14sp"
             android:visibility="gone"
             style="@style/Widget.MaterialComponents.Button.TextButton" />
 
     </LinearLayout>
-
 </LinearLayout>

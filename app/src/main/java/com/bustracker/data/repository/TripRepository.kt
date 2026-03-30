@@ -1,7 +1,7 @@
-package com.bustracker.data.repository
+package com.karroh.bussathi.data.repository
 
-import com.bustracker.data.model.Trip
-import com.bustracker.data.model.TripStatus
+import com.karroh.bussathi.data.model.Trip
+import com.karroh.bussathi.data.model.TripStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 

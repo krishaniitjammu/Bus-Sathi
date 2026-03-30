@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Bus Tracker</string>
+    <string name="app_name">Bus Sathi</string>
     
     <!-- Login Screen -->
     <string name="login_title">Bus Driver Login</string>
@@ -57,4 +57,17 @@
     <string name="upload_success">Route uploaded successfully</string>
     <string name="upload_error">Failed to upload route. Will retry.</string>
     <string name="gps_disabled">Please enable GPS to track your route</string>
+
+    <string-array name="city_options">
+        <item>Select City</item>
+        <item>Jammu</item>
+        <item>Srinagar</item>
+    </string-array>
+
+    <string-array name="capacity_options">
+        <item>Select Vehicle Capacity</item>
+        <item>5 to 13 seater (LPV)</item>
+        <item>17 to 21 seater (MPV)</item>
+        <item>32 to 52 seater (HPV)</item>
+    </string-array>
 </resources>

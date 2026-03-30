@@ -1,14 +1,14 @@
-package com.bustracker.ui.splash
+package com.karroh.bussathi.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import com.bustracker.R
-import com.bustracker.data.repository.AuthRepository
-import com.bustracker.ui.auth.LoginActivity
-import com.bustracker.ui.main.MainActivity
+import com.karroh.bussathi.R
+import com.karroh.bussathi.data.repository.AuthRepository
+import com.karroh.bussathi.ui.auth.LoginActivity
+import com.karroh.bussathi.ui.main.MainActivity
 
 /**
  * Splash screen showing the app logo while checking authentication status

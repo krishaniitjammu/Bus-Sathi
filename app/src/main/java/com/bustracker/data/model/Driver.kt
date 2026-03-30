@@ -1,4 +1,4 @@
-package com.bustracker.data.model
+package com.karroh.bussathi.data.model
 
 /**
  * Simple model to represent driver profile stored under drivers/{uid}

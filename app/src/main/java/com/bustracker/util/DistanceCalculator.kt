@@ -1,6 +1,6 @@
-package com.bustracker.util
+package com.karroh.bussathi.util
 
-import com.bustracker.data.model.LocationPoint
+import com.karroh.bussathi.data.model.LocationPoint
 import kotlin.math.*
 
 /**

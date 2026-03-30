@@ -1,4 +1,4 @@
-package com.bustracker.ui.auth
+package com.karroh.bussathi.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.bustracker.R
-import com.bustracker.data.repository.AuthRepository
-import com.bustracker.databinding.ActivityRegisterBinding
-import com.bustracker.ui.main.MainActivity
+import com.karroh.bussathi.R
+import com.karroh.bussathi.data.repository.AuthRepository
+import com.karroh.bussathi.databinding.ActivityRegisterBinding
+import com.karroh.bussathi.ui.main.MainActivity
 import kotlinx.coroutines.launch
 
 /**
@@ -31,6 +31,8 @@ class RegisterActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.btnCreateAccount.setOnClickListener {
             it.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.button_click))
+
+            // 1. Get Text Inputs
             val name = binding.etName.text.toString().trim()
             val email = binding.etEmailReg.text.toString().trim()
             val password = binding.etPasswordReg.text.toString().trim()
@@ -38,13 +40,29 @@ class RegisterActivity : AppCompatActivity() {
             val vehicle = binding.etVehicle.text.toString().trim()
             val license = binding.etLicense.text.toString().trim()
 
-            if (validateInput(name, email, password, phone, vehicle, license)) {
-                createAccount(name, email, password, phone, vehicle, license)
+            // 2. Get Spinner Selections
+            // These IDs must match your activity_signup.xml (spinnerCity, spinnerCapacity)
+            val region = binding.spinnerCity.selectedItem.toString()
+            val capacity = binding.spinnerCapacity.selectedItem.toString()
+
+            // 3. Validate and Create
+            if (validateInput(name, email, password, phone, vehicle, license, region, capacity)) {
+                createAccount(name, email, password, phone, vehicle, license, region, capacity)
             }
         }
     }
 
-    private fun validateInput(name: String, email: String, password: String, phone: String, vehicle: String, license: String): Boolean {
+    // Updated validation to include Region and Capacity
+    private fun validateInput(
+        name: String,
+        email: String,
+        password: String,
+        phone: String,
+        vehicle: String,
+        license: String,
+        region: String,
+        capacity: String
+    ): Boolean {
         var isValid = true
 
         if (name.isEmpty()) {
@@ -67,26 +85,37 @@ class RegisterActivity : AppCompatActivity() {
         } else {
             binding.tilPasswordReg.error = null
         }
-        
+
         if (phone.isEmpty()) {
             binding.tilPhone.error = "Phone number is required"
             isValid = false
         } else {
             binding.tilPhone.error = null
         }
-        
+
         if (vehicle.isEmpty()) {
             binding.tilVehicle.error = "Vehicle/Bus number is required"
             isValid = false
         } else {
             binding.tilVehicle.error = null
         }
-        
+
         if (license.isEmpty()) {
             binding.tilLicense.error = "License number is required"
             isValid = false
         } else {
             binding.tilLicense.error = null
+        }
+
+        // Validate Spinners (Ensure user didn't leave it on "Select City")
+        if (region == "Select City") {
+            showError("Please select a valid City/Region")
+            isValid = false
+        }
+
+        if (capacity == "Select Vehicle Capacity") {
+            showError("Please select your vehicle capacity")
+            isValid = false
         }
 
         return isValid
@@ -98,16 +127,27 @@ class RegisterActivity : AppCompatActivity() {
         password: String,
         phone: String,
         vehicle: String,
-        license: String
+        license: String,
+        region: String,
+        capacity: String
     ) {
         showLoading(true)
 
         lifecycleScope.launch {
-            val result = authRepository.createAccount(email, password, name, phone, vehicle, license)
+            // IMPORTANT: You must update your AuthRepository to accept these new arguments!
+            val result = authRepository.createAccount(
+                email,
+                password,
+                name,
+                phone,
+                vehicle,
+                license,
+                region,    // Passing Region to Repository
+                capacity   // Passing Capacity to Repository
+            )
 
             result.onSuccess {
                 showLoading(false)
-                // After account creation, sign out so the driver can sign in manually
                 authRepository.signOut()
 
                 Toast.makeText(
@@ -116,7 +156,6 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                // Return to LoginActivity and prefill email
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 intent.putExtra("email", email)
                 startActivity(intent)
@@ -137,6 +176,9 @@ class RegisterActivity : AppCompatActivity() {
         binding.etPhone.isEnabled = !isLoading
         binding.etVehicle.isEnabled = !isLoading
         binding.etLicense.isEnabled = !isLoading
+        // Also disable spinners while loading
+        binding.spinnerCity.isEnabled = !isLoading
+        binding.spinnerCapacity.isEnabled = !isLoading
 
         if (isLoading) {
             binding.btnCreateAccount.text = getString(R.string.registering)
@@ -148,12 +190,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun showError(message: String) {
         binding.tvRegError.text = message
         binding.tvRegError.visibility = View.VISIBLE
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    private fun navigateToMain() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        // Optional: Hide after 3 seconds or keep visible
     }
 }
