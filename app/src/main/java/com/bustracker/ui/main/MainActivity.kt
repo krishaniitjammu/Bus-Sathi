@@ -41,6 +41,8 @@ import com.karroh.bussathi.util.TripStateManager
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.Calendar
+import com.bustracker.ui.main.LeaderboardActivity
 
 /**
  * Main screen for trip management, updates, and security checks.
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     ) { isGranted: Boolean ->
         if (isGranted) {
             Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show()
-            scheduleDailyReminder()
+            scheduleDailyReminder(this)
         }
     }
 
@@ -125,7 +127,14 @@ class MainActivity : AppCompatActivity() {
         checkForUpdates()
 
         setupGpsReceiver()
+
+        //leaderbored
+        binding.btnLeaderboard.setOnClickListener {
+            val intent = Intent(this, LeaderboardActivity::class.java)
+            startActivity(intent)
+        }
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -135,7 +144,13 @@ class MainActivity : AppCompatActivity() {
 
         // ADD THIS: Start listening for GPS changes
         val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
-        gpsStatusReceiver?.let { registerReceiver(it, filter) }
+        gpsStatusReceiver?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(it, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(it, filter)
+            }
+        }
 
         // ADD THIS: Check immediately in case they turned it off while app was in background
         checkGpsStatusDuringTrip()
@@ -174,11 +189,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isDevOptionsEnabled(): Boolean {
-        val devOptions = try { Settings.Global.getInt(contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) } catch (e: Exception) { 0 }
-        val adbOptions = try { Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) } catch (e: Exception) { 0 }
+        val devOptions = try {
+            Settings.Global.getInt(contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0)
+        } catch (e: Exception) {
+            0
+        }
+        val adbOptions = try {
+            Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0)
+        } catch (e: Exception) {
+            0
+        }
         val mockLocation = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            try { if(Settings.Secure.getString(contentResolver, Settings.Secure.ALLOW_MOCK_LOCATION) != "0") 1 else 0 } catch (e: Exception) { 0 }
-        } else { 0 }
+            try {
+                if (Settings.Secure.getString(
+                        contentResolver,
+                        Settings.Secure.ALLOW_MOCK_LOCATION
+                    ) != "0"
+                ) 1 else 0
+            } catch (e: Exception) {
+                0
+            }
+        } else {
+            0
+        }
 
         return devOptions == 1 || adbOptions == 1 || mockLocation == 1
     }
@@ -265,7 +298,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.btnStartTrip.setOnClickListener {
-            it.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.button_click))
+            it.startAnimation(
+                android.view.animation.AnimationUtils.loadAnimation(
+                    this,
+                    R.anim.button_click
+                )
+            )
             if (isGPSEnabled()) {
                 startTrip()
             } else {
@@ -274,12 +312,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnEndTrip.setOnClickListener {
-            it.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.button_click))
+            it.startAnimation(
+                android.view.animation.AnimationUtils.loadAnimation(
+                    this,
+                    R.anim.button_click
+                )
+            )
             endTrip()
         }
 
         binding.btnLogout.setOnClickListener {
-            it.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.button_click))
+            it.startAnimation(
+                android.view.animation.AnimationUtils.loadAnimation(
+                    this,
+                    R.anim.button_click
+                )
+            )
             showLogoutConfirmation()
         }
 
@@ -309,14 +357,19 @@ class MainActivity : AppCompatActivity() {
     private fun checkNotificationPermissionFlow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
-                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
                     // Already granted. Ensure reminder is scheduled.
-                    scheduleDailyReminder()
+                    scheduleDailyReminder(this)
                 }
+
                 shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
                     // User previously denied. Show the Soft Gate Pop-up!
                     showNotificationSoftGate()
                 }
+
                 else -> {
                     // First time asking ever. Ask directly without your custom pop-up.
                     requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -324,7 +377,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // Devices below Android 13 do not need explicit runtime permission for notifications
-            scheduleDailyReminder()
+            scheduleDailyReminder(this)
         }
     }
 
@@ -343,40 +396,32 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun scheduleDailyReminder() {
-        // 1. Lock the timezone to Indian Standard Time (IST)
-        val istTimeZone = java.util.TimeZone.getTimeZone("Asia/Kolkata")
+    private fun scheduleDailyReminder(context: Context) {
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance()
 
-        // 2. Get the exact time right now in IST
-        val currentDate = java.util.Calendar.getInstance(istTimeZone)
+        // Set the target time to 8:00:00 AM
+        dueDate.set(Calendar.HOUR_OF_DAY, 8)
+        dueDate.set(Calendar.MINUTE, 0)
+        dueDate.set(Calendar.SECOND, 0)
 
-        // 3. Set the target time to exactly 8:00 AM IST today
-        val dueDate = java.util.Calendar.getInstance(istTimeZone)
-        dueDate.set(java.util.Calendar.HOUR_OF_DAY, 8) // 8 for 8:00 AM
-        dueDate.set(java.util.Calendar.MINUTE, 0)
-        dueDate.set(java.util.Calendar.SECOND, 0)
-        dueDate.set(java.util.Calendar.MILLISECOND, 0)
-
-        // 4. If 8:00 AM IST has already passed today, push it to 8:00 AM tomorrow
+        // If it is already past 8:00 AM today, move the target to 8:00 AM tomorrow
         if (dueDate.before(currentDate)) {
-            dueDate.add(java.util.Calendar.HOUR_OF_DAY, 24)
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
         }
 
-        // 5. Calculate the exact milliseconds to wait until 8:00 AM IST hits
+        // Calculate the exact time difference in milliseconds
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
 
-        // 6. Build the WorkRequest to wait until 8:00 AM, then repeat every 24 hours
-        val dailyWorkRequest = PeriodicWorkRequestBuilder<DailyReminderWorker>(
-            24L,
-            TimeUnit.HOURS
-        )
+        // 🛑 IMPORTANT: Change 'YourWorkerClassName' to the actual name of your Worker class!
+        val dailyWorkRequest = PeriodicWorkRequestBuilder<DailyReminderWorker>(24, TimeUnit.HOURS)
             .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
             .build()
 
-        // 7. Hand it over to Android WorkManager
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "DailyTripReminder",
-            ExistingPeriodicWorkPolicy.UPDATE,
+        // Enqueue the work
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "daily_8am_reminder",
+            ExistingPeriodicWorkPolicy.KEEP,
             dailyWorkRequest
         )
     }
@@ -403,7 +448,8 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Location permission granted", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -465,7 +511,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val user = authRepository.getCurrentUser()
             val uid = user?.uid ?: ""
-            val driverResult = if (uid.isNotBlank()) authRepository.getDriver(uid) else Result.failure(Exception("No user"))
+            val driverResult =
+                if (uid.isNotBlank()) authRepository.getDriver(uid) else Result.failure(Exception("No user"))
             val vehicleNumber = driverResult.getOrNull()?.vehicleNumber ?: ""
             val safeVehicle = if (vehicleNumber.isNotBlank()) {
                 vehicleNumber.replace("\\s+".toRegex(), "_").uppercase(Locale.getDefault())
@@ -489,7 +536,8 @@ class MainActivity : AppCompatActivity() {
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
             isTripActive = true
             updateTripUI()
-            Toast.makeText(this@MainActivity, getString(R.string.trip_started), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, getString(R.string.trip_started), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -561,8 +609,48 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             Toast.makeText(this@MainActivity, getString(R.string.trip_ended), Toast.LENGTH_SHORT).show()
+
             tripRepository.uploadTrip(trip).onSuccess {
-                Toast.makeText(this@MainActivity, getString(R.string.upload_success), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.upload_success),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // ==========================================
+                // UPDATE LEADERBOARD (QUERY FIRST METHOD)
+                // ==========================================
+                val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+
+                if (!uid.isNullOrBlank()) {
+                    val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+                    // Step 1: Search for the document where the 'uid' field matches the logged-in user
+                    db.collection("drivers")
+                        .whereEqualTo("uid", uid)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            if (!documents.isEmpty) {
+                                // Step 2: We found your profile! Grab its TRUE auto-generated Document ID
+                                val actualDocId = documents.documents[0].id
+
+                                // Step 3: Now update the totalKm safely
+                                val updateData = mapOf(
+                                    "totalKm" to com.google.firebase.firestore.FieldValue.increment(totalDistance)
+                                )
+
+                                db.collection("drivers").document(actualDocId)
+                                    .set(updateData, com.google.firebase.firestore.SetOptions.merge())
+                                    .addOnSuccessListener {
+                                        android.widget.Toast.makeText(this@MainActivity, "Total KM added to your profile!", android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                            } else {
+                                android.widget.Toast.makeText(this@MainActivity, "Error: Could not find driver profile", android.widget.Toast.LENGTH_LONG).show()
+                            }
+                        }
+                }
+                // ==========================================
+
             }.onFailure { exception ->
                 Toast.makeText(
                     this@MainActivity,
@@ -620,7 +708,8 @@ class MainActivity : AppCompatActivity() {
             .setMessage(getString(R.string.logout_confirmation))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 if (isTripActive) {
-                    Toast.makeText(this, "Please end the current trip first", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please end the current trip first", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     authRepository.signOut()
                     val intent = Intent(this, LoginActivity::class.java)

@@ -219,7 +219,11 @@ class LocationTrackingService : Service() {
             }
         }
         val filter = android.content.IntentFilter(android.location.LocationManager.PROVIDERS_CHANGED_ACTION)
-        registerReceiver(gpsReceiver, filter)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(gpsReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(gpsReceiver, filter)
+        }
     }
 
     private fun sendGpsWarningNotification() {

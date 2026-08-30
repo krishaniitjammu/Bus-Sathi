@@ -12,8 +12,8 @@ android {
         applicationId = "com.karroh.bussathi"
         minSdk = 24
         targetSdk = 35
-        versionCode = 18
-        versionName = "1.7"
+        versionCode = 22
+        versionName = "1.74"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -29,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         viewBinding = true
@@ -56,6 +56,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Google Play Console Fix: Forcing the updated, safe version of reCAPTCHA
+    implementation("com.google.android.recaptcha:recaptcha:18.4.0")
     
     // Google Play Services - Location
     implementation("com.google.android.gms:play-services-location:21.1.0")
@@ -78,4 +81,7 @@ dependencies {
 
     //Animations
     implementation("com.airbnb.android:lottie:6.4.0")
+
+    //location
+    implementation("com.google.code.gson:gson:2.10.1")
 }

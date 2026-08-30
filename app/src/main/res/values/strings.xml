@@ -49,7 +49,7 @@
     <string name="notification_channel_name">Trip Tracking</string>
     <string name="notification_channel_description">Notifications for active trip tracking</string>
     <string name="notification_title">Trip in Progress</string>
-    <string name="notification_text">Recording route: %d points, %.2f km</string>
+    <string name="notification_text">Recording route: %1$d points, %2$.2f km</string>
     
     <!-- Messages -->
     <string name="trip_started">Trip started successfully</string>

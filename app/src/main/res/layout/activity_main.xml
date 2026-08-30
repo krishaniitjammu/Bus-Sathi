@@ -100,7 +100,7 @@
             android:id="@+id/btnEndTrip"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="@color/button_disabled"
             android:enabled="false"
             android:text="@string/end_trip"
@@ -109,6 +109,18 @@
             app:cornerRadius="8dp"
             app:icon="@android:drawable/ic_media_pause"
             app:iconGravity="textStart" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLeaderboard"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="32dp"
+            android:text="VIEW LEADERBOARD"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#1976D2"
+            app:cornerRadius="8dp" />
 
         <View
             android:layout_width="match_parent"

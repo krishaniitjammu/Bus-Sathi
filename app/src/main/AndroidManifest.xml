@@ -72,6 +72,10 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <activity
+            android:name="com.bustracker.ui.main.LeaderboardActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
