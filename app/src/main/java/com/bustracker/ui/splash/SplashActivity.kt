@@ -33,8 +33,8 @@ class SplashActivity : AppCompatActivity() {
     private fun navigateToNextScreen() {
         if (isFinishing || isDestroyed) return
 
-        // First launch: ask for research data consent before moving on
-        if (!ConsentManager.getInstance(applicationContext).hasAnsweredConsent()) {
+        // Research data consent is mandatory: ask until the user accepts
+        if (!ConsentManager.getInstance(applicationContext).isResearchConsentGranted()) {
             ConsentDialog.show(this) { navigateToNextScreen() }
             return
         }
