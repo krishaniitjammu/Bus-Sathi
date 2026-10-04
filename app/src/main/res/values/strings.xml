@@ -58,6 +58,15 @@
     <string name="upload_error">Failed to upload route. Will retry.</string>
     <string name="gps_disabled">Please enable GPS to track your route</string>
 
+    <!-- Privacy & Research Consent Popup -->
+    <string name="consent_title">Help improve bus travel</string>
+    <string name="consent_summary">Bus Sathi records your trip routes (GPS points, trip times and distance) along with your driver and vehicle details.\n\nWe would like to use this data for research on bus routes and public transport. Do you allow your data to be used for research?\n\nYou can keep using the app either way.</string>
+    <string name="consent_details_show">Read full privacy details</string>
+    <string name="consent_details_hide">Hide privacy details</string>
+    <string name="consent_details">What we collect\n• Account details you enter when registering: name, email, phone number, vehicle number, license number, city and vehicle capacity.\n• Trip data while a trip is active: GPS location points (latitude, longitude, time and accuracy), trip start and end time, and total distance.\n\nWhy we collect it\n• To run the app: recording your trips and showing the leaderboard.\n• With your permission, for research on bus routes, travel patterns and public transport planning.\n\nYour choice\n• Location is recorded only between Start Trip and End Trip.\n• If you decline, the app works the same and your data is not used for research.</string>
+    <string name="consent_accept">Accept</string>
+    <string name="consent_decline">Decline</string>
+
     <string-array name="city_options">
         <item>Select City</item>
         <item>Jammu</item>
