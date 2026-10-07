@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.karroh.bussathi"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.karroh.bussathi"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 22
-        versionName = "1.74"
+        targetSdk = 36
+        versionCode = 24
+        versionName = "1.78"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -21,7 +21,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

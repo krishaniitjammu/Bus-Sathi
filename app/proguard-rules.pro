@@ -25,3 +25,12 @@
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
 -keepattributes InnerClasses
+
+# Keep line numbers so Play Console crash reports can be deobfuscated with mapping.txt
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+
+# Data models read by Firestore (toObject/toObjects) and Gson via reflection.
+# Field and getter names must match the Firestore document keys.
+-keep class com.karroh.bussathi.data.model.** { *; }
+-keep class com.bustracker.data.model.** { *; }
